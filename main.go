@@ -89,9 +89,11 @@ func main() {
 		log.Fatal(err)
 	}
 	defer s.Close()
-	e := concurrency.NewElection(s, "/advertise-ip")
+	elecKey := "/advertise-ip"
+	e := concurrency.NewElection(s, elecKey)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+	log.Println("attempting to acquire leader lease", elecKey)
 	if err := e.Campaign(ctx, advertisedIp); err != nil {
 		log.Fatal(err)
 	}
